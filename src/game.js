@@ -20,26 +20,17 @@ class Game {
         }
     }
 
-    nextGeneration = (currentGen) => {
-        const newGen = [];
-        for (let i = 0; i < currentGen.grid.length; i++) {
-            newGen.push([]);
-            for (let j = 0; j < currentGen.grid[i].length; j++) {
-                const n = currentGen.neighbours(i, j, LivingNeighbours);
-                const cellCopy = JSON.parse(JSON.stringify(currentGen.cellAt(i, j)));
-                if (cellCopy.isAlive) {
-                    if (n.length < 2) cellCopy.isAlive = false;
-                    if (n.length > 3) cellCopy.isAlive = false;
-                } else {
-                    if (n.length === 3) {
-                        cellCopy.isAlive = true;
-                    }
-                }
-                newGen[i].push(cellCopy);
-            }
-        }
-        return newGen;
-    };
+    nextGeneration = (currentGen) => currentGen.grid.map(row => {
+        return row.map(cell => {
+            const n = currentGen.neighbours(cell, LivingNeighbours);
+            const cellCopy = JSON.parse(JSON.stringify(cell));
+            if (cellCopy.isAlive) {
+                if (n.length < 2) cellCopy.isAlive = false;
+                if (n.length > 3) cellCopy.isAlive = false;
+            } else if (n.length === 3) cellCopy.isAlive = true;
+            return cellCopy;
+        });
+    });
 }
 
 export default Game;

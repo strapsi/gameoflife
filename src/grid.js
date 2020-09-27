@@ -46,7 +46,8 @@ class Grid {
         return this.grid[row][column];
     }
 
-    neighbours(row, column, condition) {
+    neighbours(cell, condition) {
+        const {row, column} = cell;
         this.rangeCheck(row, column);
         const neighbours = [];
         neighbours.push(this.cellOrUndefined(row - 1, column - 1, condition));

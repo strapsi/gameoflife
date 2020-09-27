@@ -75,37 +75,79 @@ test('the grid should handle out of range inputs', t => {
 
 test('the grid should return a list of all neighbours for a given row and column', t => {
     const grid = new Grid(3, 3);
-    t.is(grid.neighbours(1, 1).length, 8);
-    t.is(grid.neighbours(0, 0).length, 3);
-    t.is(grid.neighbours(2, 2).length, 3);
-    t.is(grid.neighbours(1, 2).length, 5);
+    t.is(grid.neighbours({
+        row: 1,
+        column: 1
+    }).length, 8);
+    t.is(grid.neighbours({
+        row: 0,
+        column: 0
+    }).length, 3);
+    t.is(grid.neighbours({
+        row: 2,
+        column: 2
+    }).length, 3);
+    t.is(grid.neighbours({
+        row: 1,
+        column: 2
+    }).length, 5);
 });
 
 test('the neighbours function should not accept invalid inputs', t => {
     const grid = new Grid(3, 3);
-    t.throws(() => grid.neighbours(-1, 2), {
+    t.throws(() => grid.neighbours({
+        row: -1,
+        column: 2
+    }), {
         message: "row out of bounds"
     });
 
-    t.throws(() => grid.neighbours(3, 2), {
+    t.throws(() => grid.neighbours({
+        row: 3,
+        column: 2
+    }), {
         message: "row out of bounds"
     });
 
-    t.throws(() => grid.neighbours(1, -3), {
+    t.throws(() => grid.neighbours({
+        row: 1,
+        column: -3
+    }), {
         message: "column out of bounds"
     });
 
-    t.throws(() => grid.neighbours(2, 3), {
+    t.throws(() => grid.neighbours({
+        row: 2,
+        column: 3
+    }), {
         message: "column out of bounds"
     });
 });
 
 test('the neigbours function should accept a function as parameter to set a condition for returning a neighbour', t => {
     const grid = new Grid(3, 3);
-    t.is(grid.neighbours(0, 0, cell => cell.isAlive).length, 0);
-    t.is(grid.neighbours(0, 0, cell => !cell.isAlive).length, 3);
-    t.is(grid.neighbours(0, 0, LivingNeighbours).length, 0);
-    t.is(grid.neighbours(0, 0, DeadNeighbours).length, 3);
-    t.is(grid.neighbours(1, 1, LivingNeighbours).length, 0);
-    t.is(grid.neighbours(1, 1, DeadNeighbours).length, 8);
+    t.is(grid.neighbours({
+        row: 0,
+        column: 0
+    }, cell => cell.isAlive).length, 0);
+    t.is(grid.neighbours({
+        row: 0,
+        column: 0
+    }, cell => !cell.isAlive).length, 3);
+    t.is(grid.neighbours({
+        row: 0,
+        column: 0
+    }, LivingNeighbours).length, 0);
+    t.is(grid.neighbours({
+        row: 0,
+        column: 0
+    }, DeadNeighbours).length, 3);
+    t.is(grid.neighbours({
+        row: 1,
+        column: 1
+    }, LivingNeighbours).length, 0);
+    t.is(grid.neighbours({
+        row: 1,
+        column: 1
+    }, DeadNeighbours).length, 8);
 });

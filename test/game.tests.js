@@ -40,10 +40,10 @@ test('bug', t => {
     secondGrid.cellAt(2, 1).toggleState();
     secondGrid.cellAt(3, 1).toggleState();
 
-    t.is(secondGrid.neighbours(1, 2, LivingNeighbours).length, 1);
-    t.is(secondGrid.neighbours(2, 0, LivingNeighbours).length, 2);
-    t.is(secondGrid.neighbours(2, 1, LivingNeighbours).length, 3);
-    t.is(secondGrid.neighbours(3, 1, LivingNeighbours).length, 2);
+    t.is(secondGrid.neighbours(secondGrid.cellAt(1, 2), LivingNeighbours).length, 1);
+    t.is(secondGrid.neighbours(secondGrid.cellAt(2, 0), LivingNeighbours).length, 2);
+    t.is(secondGrid.neighbours(secondGrid.cellAt(2, 1), LivingNeighbours).length, 3);
+    t.is(secondGrid.neighbours(secondGrid.cellAt(3, 1), LivingNeighbours).length, 2);
 
     secondGrid.grid = game.nextGeneration(secondGrid);
 
