@@ -3,24 +3,33 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/game-of-life.js",
-  "type": "module",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "ava --watch",
-    "start": "node ./src/game-of-life.js"
+    "test:w": "ava --watch",
+    "test": "ava",
+    "start": "fast-live-reload -ep \"npm run watch\"",
+    "watch": "npx webpack --watch",
+    "build": "npm test && npx webpack"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "ava": "^3.12.1",
-    "esm": "^3.2.25"
+    "esm": "^3.2.25",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
   },
   "ava": {
     "files": [
       "test/**/*.tests.js"
     ],
-    "require": ["esm"]
+    "nodeArguments": [
+      "--experimental-modules"
+    ],
+    "require": [
+      "esm"
+    ]
   }
 }

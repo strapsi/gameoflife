@@ -3,19 +3,24 @@ import {
 } from "util";
 import Cell from './cell.js';
 
+
 class Grid {
 
-    rowInRange = row => row >= 0 && row < this.grid.length;
-    columnInRange = (row, column) => row >= 0 && row < this.grid.length &&
-        column >= 0 && column < this.grid[row].length;
-    rangeCheck = (row, column) => {
+    rowInRange(row) {
+        return row >= 0 && row < this.grid.length;
+    }
+    columnInRange(row, column) {
+        return row >= 0 && row < this.grid.length &&
+            column >= 0 && column < this.grid[row].length;
+    }
+    rangeCheck(row, column) {
         if (!this.rowInRange(row))
             throw new Error("row out of bounds")
         if (!this.columnInRange(row, column))
             throw new Error("column out of bounds")
     };
 
-    cellOrUndefined = (row, column, condition) => {
+    cellOrUndefined(row, column, condition) {
         if (this.columnInRange(row, column)) {
             const cell = this.cellAt(row, column)
             if (!condition || condition(cell)) return cell;
@@ -47,7 +52,10 @@ class Grid {
     }
 
     neighbours(cell, condition) {
-        const {row, column} = cell;
+        const {
+            row,
+            column
+        } = cell;
         this.rangeCheck(row, column);
         const neighbours = [];
         neighbours.push(this.cellOrUndefined(row - 1, column - 1, condition));

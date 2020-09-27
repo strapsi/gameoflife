@@ -1,0 +1,15 @@
+#container {
+    margin: auto;
+    width: 60%;
+    background-color: fuchsia;
+    height: 10rem;
+    display: grid;
+}
+
+.cell {
+    border: 4px solid black;
+}
+
+.cell.is-alive {
+    background-color: goldenrod;
+}

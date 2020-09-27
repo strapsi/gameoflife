@@ -4,9 +4,6 @@ import Grid, {
     DeadNeighbours
 } from '../src/grid.js';
 import Cell from '../src/cell.js';
-import {
-    isMainThread
-} from 'worker_threads';
 
 test('the grid should not be initialized with null as height', t => {
     t.throws(() => new Grid(null, 1), {

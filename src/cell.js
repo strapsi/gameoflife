@@ -15,7 +15,9 @@ class Cell {
         this.column = column;
     }
 
-    toggleState = () => this.isAlive = !this.isAlive;
+    toggleState() {
+        this.isAlive = !this.isAlive;
+    }
 }
 
 export default Cell;
