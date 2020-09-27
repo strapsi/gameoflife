@@ -1,0 +1,26 @@
+{
+  "name": "gameoflife",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/game-of-life.js",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "ava --watch",
+    "start": "node ./src/game-of-life.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ava": "^3.12.1",
+    "esm": "^3.2.25"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.tests.js"
+    ],
+    "require": ["esm"]
+  }
+}
