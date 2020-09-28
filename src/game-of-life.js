@@ -14,8 +14,8 @@ const render = (grid, generation) => {
     const next = document.getElementById('next');
     const container = document.getElementById('container');
     const start = document.getElementById('start');
-    const height = 30;
-    const width = 30;
+    const height = 45;
+    const width = 90;
     container.style.gridTemplateColumns = '1fr '.repeat(width).trim();
 
     const game = new Game();
