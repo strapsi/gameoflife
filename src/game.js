@@ -1,26 +1,34 @@
 import {
     LivingNeighbours
 } from "./grid.js";
-// import render from "./console-renderer.js";
 
 class Game {
     constructor() {
         this.generation = 0;
     }
 
-    startGame(grid, generations = -1, headless = true) {
+    async startGame(grid, generations = -1, afterNewGen, delay = 1) {
         let genCount = generations;
-        let currentGen = grid;
-        // if (!headless) render(currentGen, this.generation);
-        while (genCount > 0 || generations === -1) {
-            currentGen.grid = this.nextGeneration(currentGen);
-            this.generation++;
-            // if (!headless) render(currentGen, this.generation);
-            genCount--;
-        }
+        let currentGen = grid;        
+        return new Promise(async resolve => {
+            while (genCount > 0 || generations === -1) {
+                const p = new Promise(resolveLoop => {
+                    setTimeout(async () => {
+                        currentGen.grid = this.nextGeneration(currentGen);
+                        if (afterNewGen) afterNewGen();
+                        resolveLoop();
+                    }, delay);
+                });
+                await p;
+                genCount--;
+            }
+            resolve(this.generation);
+        });
     }
 
     nextGeneration(currentGen) {
+        this.generation++;
+        console.log("a");
         return currentGen.grid.map(row => {
             return row.map(cell => {
                 const n = currentGen.neighbours(cell, LivingNeighbours);

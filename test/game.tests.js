@@ -14,12 +14,13 @@ test('a game should know the current generation', t => {
     t.is(game.generation, 0);
 });
 
-test('a new game should be started with a maximum number of generations', t => {
+test('a new game should be started with a maximum number of generations', async t => {
     const {
         game,
         grid
     } = gameAndGrid(3, 3);
-    game.startGame(grid, 5);
+    const gen = await game.startGame(grid, 5);
+    console.log('nach game', gen);
     t.is(game.generation, 5);
 });
 
