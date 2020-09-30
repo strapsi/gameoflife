@@ -1,47 +1,49 @@
-import {
-    LivingNeighbours
-} from "./grid.js";
+import Cell from "./cell.js";
+import { LivingNeighbours } from "./grid.js";
 
 class Game {
-    constructor() {
-        this.generation = 0;
-    }
 
-    async startGame(grid, generations = -1, afterNewGen, delay = 1) {
-        let genCount = generations;
-        let currentGen = grid;        
-        return new Promise(async resolve => {
-            while (genCount > 0 || generations === -1) {
-                const p = new Promise(resolveLoop => {
-                    setTimeout(async () => {
-                        currentGen.grid = this.nextGeneration(currentGen);
-                        if (afterNewGen) afterNewGen();
-                        resolveLoop();
-                    }, delay);
-                });
-                await p;
-                genCount--;
+    start(grid, render, delay = 1) {
+        this.gameLoop = setInterval(() => {
+            if (!this.isPaused) {
+                grid.grid = this.nextGeneration(grid);
+                if (render) render();
             }
-            resolve(this.generation);
-        });
+        }, delay);
     }
 
-    nextGeneration(currentGen) {
+    stop() {
+        if (this.gameLoop > -1) {
+            clearInterval(this.gameLoop);
+            this.gameLoop = -1;
+        }
+    }
+
+    pause() { this.isPaused = true; }
+
+    resume() { this.isPaused = false; }
+
+    isRunning() { return this.gameLoop > -1 && !this.isPaused; }
+
+    nextGeneration(currentGeneration) {
         this.generation++;
-        console.log("a");
-        return currentGen.grid.map(row => {
-            return row.map(cell => {
-                const n = currentGen.neighbours(cell, LivingNeighbours);
-                const cellCopy = JSON.parse(JSON.stringify(cell));
-                if (cellCopy.isAlive) {
-                    if (n.length < 2) cellCopy.isAlive = false;
-                    if (n.length > 3) cellCopy.isAlive = false;
-                } else if (n.length === 3) cellCopy.isAlive = true;
-                return cellCopy;
+        return currentGeneration.grid.map(gridRow => {
+            return gridRow.map(cell => {
+                const livingNeighbours = currentGeneration.neighbours(cell, LivingNeighbours).length;
+                const { isAlive, row, column } = cell;
+                const isNextGenAlive = (isAlive && livingNeighbours >= 2 && livingNeighbours <= 3) || (!isAlive && livingNeighbours === 3)
+                return new Cell(isNextGenAlive, row, column);
             });
 
         })
     };
+
+    constructor() {
+        this.generation = 0;
+        this.state = 'generated';
+        this.gameLoop = -1;
+        this.isPaused = false;
+    }
 }
 
 export default Game;

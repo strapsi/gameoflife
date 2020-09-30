@@ -1,65 +1,41 @@
 import Grid from './grid.js';
 import Game from './game.js';
 
-
-const render = (grid, generation) => {
-    const renderedGrid = grid.grid
-        .map(row => row.map(cell => cell.isAlive ? 'O' : ':')
-            .reduce((a, b) => a + b, ''))
-        .reduce((a, b) => a + '\n' + b, '');
-};
-
 (() => {
-    const btn = document.getElementById('btn');
     const next = document.getElementById('next');
     const container = document.getElementById('container');
     const start = document.getElementById('start');
+    const stop = document.getElementById('stop');
+    const pause = document.getElementById('pause');
+    const cont = document.getElementById('continue');
+    const speed = document.getElementById('speed');
+    const flish = document.getElementById('flish');
     const height = 45;
     const width = 90;
     container.style.gridTemplateColumns = '1fr '.repeat(width).trim();
 
     const game = new Game();
     const grid = new Grid(height, width);
-    grid.cellAt(1, 2).toggleState();
-    grid.cellAt(2, 0).toggleState();
-    grid.cellAt(2, 1).toggleState();
-    grid.cellAt(3, 1).toggleState();
 
     const toggleCell = cell => {
         const [row, column] = cell.id.split('-').slice(1);
-        grid.cellAt(row, column).isAlive = !cell.classList.contains('is-alive');
+        grid.cellAt(row, column).toggleState();
         cell.classList.toggle('is-alive');
     }
 
-    const mouseClickEvent = event => toggleCell(event.srcElement);
-
-    const mouseOverEvent = event => {
-        if (event.buttons == 1)
-            toggleCell(event.srcElement);
+    const onCellClick = event => {
+        if (!game.isRunning()) toggleCell(event.srcElement);
     }
 
-    for (let i = 0; i < height; i++) {
-        for (let j = 0; j < width; j++) {
-            let cell = document.createElement('div');
-            cell.classList.add('cell');
-            if (grid.cellAt(i, j).isAlive) cell.classList.add('is-alive');
-            cell.id = 'cell-' + i + '-' + j;
-            cell.onclick = mouseClickEvent;
-            cell.onmouseover = mouseOverEvent;
-            container.appendChild(cell);
+    const mouseOverEvent = event => {
+        if (!game.isRunning() && event.buttons == 1 && !event.srcElement.classList.contains('is-alive')) {
+            flish.play();
+            toggleCell(event.srcElement);
         }
     }
 
-
-    start.onclick = () => {
-        game.startGame(grid, 30);
-        console.log(game.generation)
-    }
-    btn.onclick = () => console.log('ich wurde geklickt');
-    next.onclick = () => {
-        grid.grid = game.nextGeneration(grid);
-        console.log(game)
-
+    const updateGrid = () => {
+        const s = (new Date).getTime();
         for (let i = 0; i < height; i++) {
             for (let j = 0; j < width; j++) {
                 const cell = document.getElementById(`cell-${i}-${j}`);
@@ -67,5 +43,57 @@ const render = (grid, generation) => {
                 if (!grid.cellAt(i, j).isAlive && cell.classList.contains('is-alive')) cell.classList.remove('is-alive');
             }
         }
+    }
+
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            if (grid.cellAt(i, j).isAlive) cell.classList.add('is-alive');
+            cell.id = 'cell-' + i + '-' + j;
+            cell.onclick = onCellClick;
+            cell.onmouseover = mouseOverEvent;
+            container.appendChild(cell);
+        }
+    }
+
+    speed.onchange = event => {
+        if (game.isRunning()) {
+            game.stop();
+            game.start(grid, updateGrid, event.target.value);
+        }
+    }
+    start.onclick = () => {
+        game.start(grid, updateGrid, speed.value);
+        game.resume();
+        start.disabled = true;
+        stop.disabled = false;
+        pause.disabled = false;
+        cont.disabled = true;
+    }
+    stop.onclick = () => {
+        game.stop();
+        start.disabled = false;
+        stop.disabled = true;
+        pause.disabled = true;
+        cont.disabled = true;
+    }
+    pause.onclick = () => {
+        game.pause();
+        start.disabled = true;
+        stop.disabled = false;
+        pause.disabled = true;
+        cont.disabled = false;
+    }
+    cont.onclick = () => {
+        game.resume();
+        start.disabled = true;
+        stop.disabled = false;
+        pause.disabled = false;
+        cont.disabled = true;
+    }
+    next.onclick = () => {
+        grid.grid = game.nextGeneration(grid);
+        updateGrid();
     };
 })();

@@ -8,10 +8,16 @@
 </head>
 
 <body>
+    <audio id="flish" src="./flish.ogg"></audio>
     <link href="./styles.css" rel="stylesheet">
-    <button id="btn">kann das sein</button>
-    <button id="next">next</button>    
-    <button id="start">start</button>
+    <nav id="navbar">
+        <button class="button" id="next">next</button>
+        <button class="button" id="start">start</button>
+        <button class="button" id="stop" disabled>stop</button>
+        <button class="button" id="pause" disabled>pause</button>
+        <button class="button" id="continue" disabled>weiter</button>
+    </nav>
+    <input type="range" name="speed" id="speed" min="100" max="1000">
     <div id="container"></div>
     <script src="out/gol.js"></script>
 </body>
